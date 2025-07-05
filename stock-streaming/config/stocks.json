@@ -1,0 +1,17 @@
+{
+    "stocks": [
+      "NVDA",
+      "MSFT", 
+      "AAPL",
+      "AMZN",
+      "GOOGL",
+      "GOOG",
+      "META",
+      "AVGO",
+      "TSM",
+      "TSLA",
+      "JPM",
+      "WMT"
+    ],
+    "refresh_interval": 10
+  }

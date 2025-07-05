@@ -1,0 +1,14 @@
+# .gitignore
+.env
+.env.local
+.env.*.local
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+.pytest_cache/
+.vscode/
+.idea/
