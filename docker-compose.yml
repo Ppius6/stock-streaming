@@ -2,6 +2,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
     container_name: zookeeper
+    restart: no
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -11,6 +12,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
+    restart: no
     depends_on:
       - zookeeper
     ports:
@@ -26,6 +28,7 @@ services:
   postgres:
     image: postgres:13
     container_name: postgres
+    restart: no
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -39,6 +42,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
+    restart: no
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
