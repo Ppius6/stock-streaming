@@ -27,11 +27,14 @@ class DatabaseConsumer:
     def connect_to_kafka(self):
         """Connect to Kafka consumer with error handling."""
         max_retries = 10
+
+        kafka_servers = os.getenv("KAFKA_SERVERS", "localhost:9092").split(",")
+
         for attempt in range(max_retries):
             try:
                 self.consumer = KafkaConsumer(
                     "stock-prices",
-                    bootstrap_servers=["localhost:9092"],
+                    bootstrap_servers=["kafka:9092"],
                     value_deserializer=lambda v: json.loads(v.decode("utf-8")),
                     auto_offset_reset="earliest",
                     group_id="stock-consumer-group",
@@ -53,7 +56,7 @@ class DatabaseConsumer:
         for attempt in range(max_retries):
             try:
                 self.connection = psycopg2.connect(
-                    host="localhost",
+                    host="postgres",
                     database=os.getenv("POSTGRES_DB"),
                     user=os.getenv("POSTGRES_USER"),
                     password=os.getenv("POSTGRES_PASSWORD"),
@@ -83,18 +86,21 @@ class DatabaseConsumer:
 
                 cursor.execute(
                     """
-                    INSERT INTO stock_prices (symbol, price, volume, timestamp)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO stock_prices (symbol, open_price, high, low, price, volume, timestamp)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
                     (
                         data["symbol"],
-                        data["price"],
+                        data["open"],
+                        data["high"],
+                        data["low"],
+                        data["close"],
                         data["volume"],
                         datetime.fromisoformat(data["timestamp"]),
                     ),
                 )
 
-                logger.info(f"💾 Stored: {data['symbol']} - ${data['price']:.2f}")
+                logger.info(f"💾 Stored: {data['symbol']} - ${data['close']:.2f}")
 
             except Exception as e:
                 logger.error(f"❌ Database error: {e}")

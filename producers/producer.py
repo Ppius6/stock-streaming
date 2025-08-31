@@ -1,12 +1,12 @@
 import json
 import logging
+import os
 import time
 from datetime import datetime
 
 import yfinance as yf
 from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
-
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -58,10 +58,13 @@ class StockProducer:
         """Connect to Kafka producer with error handling"""
         max_retries = 10
 
+        # Get kafka servers from environment variable
+        kafka_servers = os.getenv("KAFKA_SERVERS", "localhost:9092").split(",")
+
         for attempt in range(max_retries):
             try:
                 self.producer = KafkaProducer(
-                    bootstrap_servers=["localhost:9092"],
+                    bootstrap_servers=["kafka:9092"],
                     value_serializer=lambda v: json.dumps(v).encode("utf-8"),
                     retries=5,
                     retry_backoff_ms=1000,
@@ -85,16 +88,23 @@ class StockProducer:
                     ticker = yf.Ticker(symbol)
                     data = ticker.history(period="1d", interval="1m").tail(1)
 
+                    info = ticker.info
+                    market_cap = info.get("marketCap", None)
+
                     if not data.empty:
                         price_data = {
                             "symbol": symbol,
-                            "price": float(data["Close"].iloc[0]),
+                            "open": float(data["Open"].iloc[0]),
+                            "high": float(data["High"].iloc[0]),
+                            "low": float(data["Low"].iloc[0]),
+                            "close": float(data["Close"].iloc[0]),
                             "volume": int(data["Volume"].iloc[0]),
+                            "market_cap": market_cap,
                             "timestamp": datetime.now().isoformat(),
                         }
 
                         self.producer.send("stock-prices", value=price_data)
-                        logger.info(f"📤 Sent: {symbol} - ${price_data['price']:.2f}")
+                        logger.info(f"📤 Sent: {symbol} - ${price_data['close']:.2f}")
 
                 except Exception as e:
                     logging.error(f"Error fetching data for {symbol}: {e}")

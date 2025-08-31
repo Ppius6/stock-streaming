@@ -1,6 +1,9 @@
 CREATE TABLE stock_prices (
     id SERIAL PRIMARY KEY,
     symbol VARCHAR(10) NOT NULL,
+    open_price DECIMAL(10, 2),
+    high DECIMAL(10, 2),
+    low DECIMAL(10, 2),
     price DECIMAL(10, 2) NOT NULL,
     volume BIGINT,
     market_cap BIGINT,

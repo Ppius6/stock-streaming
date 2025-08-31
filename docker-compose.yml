@@ -12,7 +12,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
-    restart: no
+    restart: unless-stopped
     depends_on:
       - zookeeper
     ports:
@@ -20,7 +20,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
@@ -50,6 +50,32 @@ services:
       - "5051:80"
     depends_on:
       - postgres
+
+  producer:
+    build: .
+    container_name: stock-producer
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    command: python producers/producer.py
+    volumes:
+      - ./config:/app/config
+      - .:/app
+
+  consumer:
+    build: .
+    container_name: stock-consumer
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - postgres
+    command: python consumers/consumer.py
+    volumes:
+      - .:/app
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
 volumes:
   postgres_data:
