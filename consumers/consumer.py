@@ -86,7 +86,7 @@ class DatabaseConsumer:
 
                 cursor.execute(
                     """
-                    INSERT INTO stock_prices (symbol, open_price, high, low, price, volume, timestamp)
+                    INSERT INTO stock_prices (symbol, open_price, high, low, close_price, volume, timestamp)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
                     (

@@ -26,6 +26,7 @@ class StockProducer:
                 config = json.load(f)
 
             stocks_config = config.get("stocks", [])
+            self.refresh_interval = config.get("refresh_interval", 3600)
 
             stocks = []
             for item in stocks_config:
@@ -43,15 +44,18 @@ class StockProducer:
                 "NVDA",
                 "MSFT",
                 "AAPL",
-                "AMZN",
-                "GOOGL",
                 "GOOG",
+                "AMZN",
                 "META",
+                "2222.SR",
                 "AVGO",
                 "TSM",
+                "BRK-B",
                 "TSLA",
                 "JPM",
                 "WMT",
+                "TCEHY",
+                "V",
             ]
 
     def connect_to_kafka(self):
@@ -86,7 +90,7 @@ class StockProducer:
             for symbol in self.stocks:
                 try:
                     ticker = yf.Ticker(symbol)
-                    data = ticker.history(period="1d", interval="1m").tail(1)
+                    data = ticker.history(period="1d", interval="1h").tail(1)
 
                     info = ticker.info
                     market_cap = info.get("marketCap", None)
@@ -108,7 +112,7 @@ class StockProducer:
 
                 except Exception as e:
                     logging.error(f"Error fetching data for {symbol}: {e}")
-            time.sleep(10)
+            time.sleep(self.refresh_interval)
 
 
 if __name__ == "__main__":

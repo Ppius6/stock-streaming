@@ -1,17 +1,20 @@
 {
     "stocks": [
-      "NVDA",
-      "MSFT", 
-      "AAPL",
-      "AMZN",
-      "GOOGL",
-      "GOOG",
-      "META",
-      "AVGO",
-      "TSM",
-      "TSLA",
-      "JPM",
-      "WMT"
+            "NVDA",
+            "MSFT",
+            "AAPL",
+            "GOOG",
+            "AMZN",
+            "META",
+            "2222.SR",
+            "AVGO",
+            "TSM",
+            "BRK-B",
+            "TSLA",
+            "JPM",
+            "WMT",
+            "TCEHY",
+            "V"
     ],
-    "refresh_interval": 10
+    "refresh_interval": 3600
   }
