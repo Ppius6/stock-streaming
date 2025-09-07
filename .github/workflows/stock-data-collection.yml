@@ -2,7 +2,7 @@ name: Stock Data Collection
 
 on:
   schedule:
-    - cron: "0 * * * *" # Runs every hour
+    - cron: "0 * * * 1-5" # Runs every hour, Monday to Friday (1=Monday, 5=Friday)
   workflow_dispatch: # Allow manual trigger
 
 jobs:
