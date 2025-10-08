@@ -10,5 +10,6 @@ CREATE TABLE stock_prices (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_only DATE GENERATED ALWAYS AS (timestamp::DATE) STORED
 );
+
 CREATE INDEX idx_symbol_timestamp ON stock_prices (symbol, timestamp);
 CREATE INDEX idx_date_symbol_price ON stock_prices (date_only, symbol, close_price);
