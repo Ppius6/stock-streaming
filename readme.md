@@ -2,6 +2,8 @@
 
 Collect hourly stock prices from Yahoo Finance and store them in PostgreSQL for analysis with Power BI.
 
+![Architecture Diagram](stock-pipeline-flowchart.png)
+
 ## Two Deployment Options
 
 ### Option 1: GitHub Actions (Free, Recommended)
