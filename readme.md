@@ -12,7 +12,7 @@ Runs hourly data collection automatically using GitHub's free compute and Supaba
 
 ### Option 2: Docker (Local Development)
 
-Full Kafka-based streaming setup for local testing and development.
+Runs Kafka, PostgreSQL, and pgAdmin locally for testing and development.
 
 ## Quick Start (GitHub Actions)
 
@@ -43,6 +43,10 @@ Full Kafka-based streaming setup for local testing and development.
    - Go to Actions tab → Run workflow manually to test
    - Data collected hourly automatically
 
+## Dashboard
+
+[View Live Dashboard](https://app.powerbi.com/view?r=eyJrIjoiZDY5YjdiMWYtOTRlYS00MDdhLWE4M2QtNGRjNjFhMTE2NmRmIiwidCI6IjEyYjNhOGVhLWNmZTQtNDVkNS1hNDE1LWE1ZWMyNGRhMTJmYyJ9)
+
 ## Connect to Power BI
 
 1. **Get Data** → PostgreSQL database
@@ -57,7 +61,21 @@ Edit `config/stocks.json` to change which stocks to track:
 
 ```json
 {
-  "stocks": ["NVDA", "MSFT", "AAPL", "GOOGL", "AMZN", "META", "TSLA"],
+  "stocks": ["NVDA",
+            "MSFT",
+            "AAPL",
+            "GOOG",
+            "AMZN",
+            "META",
+            "2222.SR",
+            "AVGO",
+            "TSM",
+            "BRK-B",
+            "TSLA",
+            "JPM",
+            "WMT",
+            "TCEHY",
+            "V"],
   "refresh_interval": 3600 # hourly
 }
 ```
@@ -70,21 +88,6 @@ cp .env.example .env
 
 # Start services
 docker-compose up -d
-
-# Run producer and consumer
-python producers/producer.py    # Terminal 1
-python consumers/consumer.py    # Terminal 2
-```
-
-If you want to test locally:
-
-```bash
-# Start services
-docker-compose up -d
-
-# Run producer and consumer
-python producers/producer.py    # Terminal 1
-python consumers/consumer.py    # Terminal 2
 ```
 
 Access:
@@ -101,10 +104,6 @@ stock_prices (
 )
 ```
 
-## Costs
+## License
 
-- **GitHub Actions**: Free (120 hours/month)
-- **Supabase**: Free (500MB database)
-- **Power BI**: Requires license for cloud features
-
-**Total monthly cost: $0**
+MIT License
